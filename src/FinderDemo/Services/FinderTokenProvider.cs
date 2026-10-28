@@ -103,7 +103,7 @@ public sealed class FinderTokenProvider(
         {
             Content = tokenRequest.ToFormContent(),
         };
-        using var response = await httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName)
+        using var response = await httpClientFactory.CreateClient(ServiceCollectionExtensions.TokenClientName)
             .SendAsync(request, ct)
             .ConfigureAwait(false);
 

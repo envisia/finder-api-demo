@@ -62,7 +62,7 @@ internal sealed class SearchArea(IAnsiConsole console, FinderApiClient api, Fold
                     var hit = console.Prompt(
                         new SelectionPrompt<DocumentSearchHit>()
                             .Title("Which folder?")
-                            .UseConverter(h => Markup.Escape($"{h.Name}.{h.Extension}  ({h.Id})"))
+                            .UseConverter(h => Markup.Escape($"{h.FileName}  ({h.Id})"))
                             .AddChoices(hits));
                     await folders.ShowAsync(hit);
                     break;

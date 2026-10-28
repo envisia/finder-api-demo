@@ -17,10 +17,12 @@ namespace FinderDemo.Services;
 /// Thin client for the envisia finder REST API (search, locations, additionals, folders, downloads).
 /// Uploads live in <see cref="FinderUploadClient"/>. Both are registered by <c>AddFinderServices</c>.
 /// </summary>
-/// <param name="httpClientFactory">Creates the named finder <see cref="HttpClient"/> (base address from <see cref="FinderClientOptions"/>).</param>
-/// <param name="tokens">Provides the bearer tokens.</param>
+/// <param name="httpClientFactory">
+/// Creates the named finder <see cref="HttpClient"/> (base address from <see cref="FinderClientOptions"/>; the bearer
+/// token is added by <see cref="FinderAuthorizationHandler"/>).
+/// </param>
 /// <param name="logger">Logger of this client.</param>
-public sealed class FinderApiClient(IHttpClientFactory httpClientFactory, FinderTokenProvider tokens, ILogger<FinderApiClient> logger)
+public sealed class FinderApiClient(IHttpClientFactory httpClientFactory, ILogger<FinderApiClient> logger)
 {
     private const int CopyBufferSize = 81920;
 
@@ -205,7 +207,10 @@ public sealed class FinderApiClient(IHttpClientFactory httpClientFactory, Finder
         CancellationToken ct = default)
     {
         using var request = new HttpRequestMessage(method, path) { Content = CreateContent(method, body) };
-        var http = httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName);
-        return await http.SendAuthorizedAsync(tokens, request, scope, completion, ensureSuccess, ct).ConfigureAwait(false);
+        request.Options.Set(FinderAuthorizationHandler.Scope, scope);
+        var response = await httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName)
+            .SendAsync(request, completion, ct)
+            .ConfigureAwait(false);
+        return ensureSuccess ? await response.EnsureFinderSuccessAsync(ct).ConfigureAwait(false) : response;
     }
 }

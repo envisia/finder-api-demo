@@ -31,14 +31,14 @@ dotnet run --project src/FinderDemo
 
 ## Where to look
 
-The solution `FinderDemo.slnx` has one project, `src/FinderDemo`. `Directory.Build.props` holds the shared build and lint settings, and `Directory.Packages.props` holds the package versions.
+The solution `FinderDemo.slnx` has one project, `src/FinderDemo`. `Directory.Build.props` holds the shared build and lint settings, and `Directory.Packages.props` holds the package versions. `Program.cs` sets up the generic host (configuration, logging, DI) and starts the main menu.
 
 | Folder in `src/FinderDemo` | Contents |
 | --- | --- |
 | `Areas/` | What the user sees. `Search/SearchArea.cs`, `Search/FolderArea.cs` and `Upload/UploadArea.cs` read top-down, one step per API call. |
-| `Services/` | How the API is called. `FinderApiClient` covers search, locations, additionals, folders and download. `FinderUploadClient` covers the upload session. `FinderTokenProvider` handles OAuth. |
+| `Services/` | How the API is called. `FinderApiClient` covers search, locations, additionals, folders and download. `FinderUploadClient` covers the upload session. `FinderTokenProvider` gets the OAuth tokens, and `FinderAuthorizationHandler` adds them to every request. |
 | `Models/` | Request and response bodies, grouped by API area. |
-| `Extensions/` | DI registration and small HTTP helpers. |
+| `Extensions/` | Registration of the configuration sources, Serilog and the services, and small HTTP helpers. |
 | `Logging/` | Source-generated `[LoggerMessage]` methods, and the Serilog sink that prints API calls to the console. |
 
 ## Search

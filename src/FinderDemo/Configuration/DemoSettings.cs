@@ -1,14 +1,11 @@
 using FinderDemo.Extensions;
-using Microsoft.Extensions.Configuration;
 using Serilog.Events;
 
 namespace FinderDemo.Configuration;
 
 /// <summary>
-/// Settings from <c>appsettings.json</c>, <c>appsettings.Local.json</c> (git-ignored; next to the project or in the
-/// directory the app is started from), environment variables
-/// (prefix <c>FINDERDEMO_</c>, e.g. <c>FINDERDEMO_Finder__ClientSecret</c>) and command line
-/// (e.g. <c>--Finder:ServerAddress=https://…</c>).
+/// Settings bound from the host configuration; see <see cref="ConfigurationBuilderExtensions.AddFinderDemoSources"/>
+/// for where they come from.
 /// </summary>
 internal sealed class DemoSettings
 {
@@ -27,17 +24,4 @@ internal sealed class DemoSettings
         : DownloadDirectory.ToFullPath();
 
     public string ResolvedLogDirectory => (string.IsNullOrWhiteSpace(LogDirectory) ? "logs" : LogDirectory).ToFullPath();
-
-    public static DemoSettings Load(string[] args)
-    {
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), optional: true)
-            .AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.Local.json"), optional: true)
-            .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.Local.json"), optional: true)
-            .AddEnvironmentVariables(prefix: "FINDERDEMO_")
-            .AddCommandLine(args)
-            .Build();
-
-        return configuration.Get<DemoSettings>() ?? new DemoSettings();
-    }
 }

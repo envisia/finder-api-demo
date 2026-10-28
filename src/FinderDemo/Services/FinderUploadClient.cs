@@ -20,7 +20,7 @@ namespace FinderDemo.Services;
 /// Fragment rules: max. 20 MiB, recommended ~8 MiB, every fragment except the last must be a multiple of 256 KiB,
 /// and the last fragment must be smaller than the others.
 /// </summary>
-public sealed class FinderUploadClient(IHttpClientFactory httpClientFactory, FinderTokenProvider tokens, ILogger<FinderUploadClient> logger)
+public sealed class FinderUploadClient(IHttpClientFactory httpClientFactory, ILogger<FinderUploadClient> logger)
 {
     public const int FragmentAlignment = 256 * 1024;
     public const int MaxFragmentSize = 20 * 1024 * 1024;
@@ -305,7 +305,12 @@ public sealed class FinderUploadClient(IHttpClientFactory httpClientFactory, Fin
         }
     }
 
-    private Task<HttpResponseMessage> SendAsync(HttpRequestMessage message, CancellationToken ct) =>
-        httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName)
-            .SendAuthorizedAsync(tokens, message, FinderTokenProvider.ReadWriteScope, HttpCompletionOption.ResponseContentRead, ensureSuccess: true, ct);
+    /// <summary>Sends with the finder <see cref="HttpClient"/>, whose <see cref="FinderAuthorizationHandler"/> adds the bearer token.</summary>
+    private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage message, CancellationToken ct)
+    {
+        var response = await httpClientFactory.CreateClient(ServiceCollectionExtensions.HttpClientName)
+            .SendAsync(message, ct)
+            .ConfigureAwait(false);
+        return await response.EnsureFinderSuccessAsync(ct).ConfigureAwait(false);
+    }
 }

@@ -22,6 +22,16 @@ public sealed class DocumentSearchHit
     [JsonPropertyName("extension")]
     public string? Extension { get; init; }
 
+    /// <summary>
+    /// Gets the name with extension. Whether <c>name</c> contains the extension depends on the finder system setting
+    /// <c>envisia.finder.search.api.remove.folder.extension</c> (off by default: <c>Musterrechnung.pdf</c> + <c>pdf</c>),
+    /// so the extension is only appended when it is missing.
+    /// </summary>
+    public string FileName =>
+        string.IsNullOrEmpty(Extension) || (Name?.EndsWith($".{Extension}", StringComparison.OrdinalIgnoreCase) ?? false)
+            ? Name ?? Id
+            : $"{Name}.{Extension}";
+
     [JsonPropertyName("archive_date")]
     public DateTimeOffset? ArchiveDate { get; init; }
 
