@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace"
+    },
+    "indentation": {
+    },
+    "documentationRules": {
+      "documentPrivateFields": false,
+      "documentPrivateElements": false,
+      "documentExposedElements": false,
+      "documentInterfaces": false,
+      "documentInternalElements": false
+    }
+  }
+}
