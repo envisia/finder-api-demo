@@ -1,12 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!--
-    Console demo of the envisia finder REST API.
-      Areas/     what the user sees: one class per feature (search, folder, upload), reading top-down
-      Services/  how the API is called: HttpClient + System.Text.Json, no envisia NuGet package
-      Models/    request and response bodies, grouped by API area
-    Target framework, nullable and lint settings: Directory.Build.props; package versions: Directory.Packages.props.
-  -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>FinderDemo</RootNamespace>

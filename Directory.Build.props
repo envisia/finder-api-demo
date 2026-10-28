@@ -7,11 +7,6 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
 
-  <!--
-    Linting: envisia.ruleset and stylecop.json are copied from the envisia package Envisia.Utils.Linting 7.1.0,
-    so the rules apply without referencing a private package. StyleCop.Analyzers itself comes from nuget.org
-    (see GlobalPackageReference in Directory.Packages.props). A plain `dotnet build` is the lint check.
-  -->
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)envisia.ruleset</CodeAnalysisRuleSet>
